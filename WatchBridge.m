@@ -12,7 +12,13 @@ static const NSString* EVENT_WATCH_REACHABILITY_CHANGED     = @"WatchReachabilit
 static const NSString* EVENT_WATCH_USER_INFO_RECEIVED       = @"WatchUserInfoReceived";
 static const NSString* EVENT_APPLICATION_CONTEXT_RECEIVED   = @"WatchApplicationContextReceived";
 
-@implementation WatchBridge
+@implementation WatchBridge{
+    bool hasListeners;
+}
+- (dispatch_queue_t)methodQueue
+{
+    return dispatch_get_main_queue();
+}
 
 RCT_EXPORT_MODULE()
 
@@ -21,31 +27,40 @@ RCT_EXPORT_MODULE()
     EVENT_RECEIVE_MESSAGE_DATA,EVENT_WATCH_STATE_CHANGED,EVENT_WATCH_STATE_CHANGED,EVENT_ACTIVATION_ERROR,EVENT_WATCH_REACHABILITY_CHANGED,
     EVENT_APPLICATION_CONTEXT_RECEIVED,EVENT_WATCH_USER_INFO_RECEIVED];
 }
+
+-(void)startObserving {
+    hasListeners = YES;
+}
+-(void)stopObserving {
+    hasListeners = NO;
+}
 ////////////////////////////////////////////////////////////////////////////////
 // Init
 ////////////////////////////////////////////////////////////////////////////////
 
-+(id)allocWithZone:(NSZone *)zone {
-  static RNBridge *sharedInstance = nil;
-  static dispatch_once_t onceToken;
-  dispatch_once(&onceToken, ^{
-    sharedInstance = [super allocWithZone:zone];
-  });
-  return sharedInstance;
++ (id)allocWithZone:(NSZone *)zone {
+    static WatchBridge *sharedInstance = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        NSLog(@"dispatch_once at watch bridge");
+        sharedInstance = [[super allocWithZone:zone] init];
+    });
+    return sharedInstance;
 }
 
-+ (instancetype)init {
-  self = [super init];
-  if ([WCSession isSupported]) {
-    WCSession* session = [WCSession defaultSession];
-    session.delegate = self;
-    self.session = session;
-    self.transfers = [NSMutableDictionary new];
-    self.replyHandlers = [NSMutableDictionary new];
-    self.userInfo = [NSDictionary<NSString*, id> new];
-    [session activateSession];
-  }
-  return self;
+- (WatchBridge*)init {
+    NSLog(@"init on watch bridge");
+    self = [super init];
+    if ([WCSession isSupported]) {
+        WCSession* session = [WCSession defaultSession];
+        session.delegate = self;
+        self.session = session;
+        self.transfers = [NSMutableDictionary new];
+        self.replyHandlers = [NSMutableDictionary new];
+        self.userInfo = [NSDictionary<NSString*, id> new];
+        [session activateSession];
+    }
+    return self;
 }
 
 ////////////////////////////////////////////////////////////////////////////////

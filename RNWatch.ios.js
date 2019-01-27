@@ -1,4 +1,4 @@
-import { NativeModules, NativeEventEmitter, keymirror } from 'react-native'
+import { NativeModules, NativeEventEmitter, NativeAppEventEmitter, keymirror } from 'react-native'
 const watch = NativeModules.WatchBridge
 const eventEmitter=new NativeEventEmitter(watch)
 
@@ -343,6 +343,6 @@ export function getApplicationContext(cb = () => { }) {
  */
 export function _subscribe(event, cb = () => { }) {
   if (!event) { throw new Error(`Must pass event`) }
-  console.warn({watch});
+
   return eventEmitter.addListener(event, cb).remove
 }
