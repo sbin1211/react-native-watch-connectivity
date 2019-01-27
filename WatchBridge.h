@@ -4,7 +4,7 @@
 @import WatchConnectivity;
 
 
-@interface WatchBridge : NSObject <RCTBridgeModule, WCSessionDelegate>
+@interface WatchBridge : RCTEventEmitter <RCTBridgeModule, WCSessionDelegate>
 
 @property (nonatomic, strong) WCSession* session;
 @property (nonatomic, strong) NSMutableDictionary* replyHandlers;

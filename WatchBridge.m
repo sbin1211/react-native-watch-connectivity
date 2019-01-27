@@ -18,6 +18,11 @@ RCT_EXPORT_MODULE()
 
 @synthesize bridge = _bridge;
 
+- (NSArray<NSString *> *)supportedEvents {
+    return @[ EVENT_FILE_TRANSFER_ERROR, EVENT_FILE_TRANSFER_FINISHED,EVENT_RECEIVE_MESSAGE,
+    EVENT_RECEIVE_MESSAGE_DATA,EVENT_WATCH_STATE_CHANGED,EVENT_WATCH_STATE_CHANGED,EVENT_ACTIVATION_ERROR,EVENT_WATCH_REACHABILITY_CHANGED,
+    EVENT_APPLICATION_CONTEXT_RECEIVED,EVENT_WATCH_USER_INFO_RECEIVED]
+}
 ////////////////////////////////////////////////////////////////////////////////
 // Init
 ////////////////////////////////////////////////////////////////////////////////
