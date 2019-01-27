@@ -1,49 +1,49 @@
-import {NativeModules, NativeEventEmitter, keymirror} from 'react-native'
+import { NativeModules, NativeEventEmitter, keymirror } from 'react-native'
 const watch = NativeModules.WatchBridge
 
-const EVENT_FILE_TRANSFER_ERROR          = 'WatchFileTransferError'
-const EVENT_FILE_TRANSFER_FINISHED       = 'WatchFileTransferFinished'
-const EVENT_RECEIVE_MESSAGE              = 'WatchReceiveMessage'
-const EVENT_WATCH_STATE_CHANGED          = 'WatchStateChanged'
-const EVENT_WATCH_REACHABILITY_CHANGED   = 'WatchReachabilityChanged'
-const EVENT_WATCH_USER_INFO_RECEIVED     = 'WatchUserInfoReceived'
+const EVENT_FILE_TRANSFER_ERROR = 'WatchFileTransferError'
+const EVENT_FILE_TRANSFER_FINISHED = 'WatchFileTransferFinished'
+const EVENT_RECEIVE_MESSAGE = 'WatchReceiveMessage'
+const EVENT_WATCH_STATE_CHANGED = 'WatchStateChanged'
+const EVENT_WATCH_REACHABILITY_CHANGED = 'WatchReachabilityChanged'
+const EVENT_WATCH_USER_INFO_RECEIVED = 'WatchUserInfoReceived'
 const EVENT_APPLICATION_CONTEXT_RECEIVED = 'WatchApplicationContextReceived'
 
 export const WatchState = {
   NotActivated: 'NotActivated',
-  Inactive:     'Inactive',
-  Activated:    'Activated'
+  Inactive: 'Inactive',
+  Activated: 'Activated'
 }
 
 const _WatchState = {
   WCSessionActivationStateNotActivated: WatchState.NotActivated,
-  WCSessionActivationStateInactive:     WatchState.Inactive,
-  WCSessionActivationStateActivated:    WatchState.Activated
+  WCSessionActivationStateInactive: WatchState.Inactive,
+  WCSessionActivationStateActivated: WatchState.Activated
 }
 
 export const Encoding = {
-  NSASCIIStringEncoding:             1,
-  NSNEXTSTEPStringEncoding:          2,
-  NSJapaneseEUCStringEncoding:       3,
-  NSUTF8StringEncoding:              4,
-  NSISOLatin1StringEncoding:         5,
-  NSSymbolStringEncoding:            6,
-  NSNonLossyASCIIStringEncoding:     7,
-  NSShiftJISStringEncoding:          8,
-  NSISOLatin2StringEncoding:         9,
-  NSUnicodeStringEncoding:           10,
-  NSWindowsCP1251StringEncoding:     11,
-  NSWindowsCP1252StringEncoding:     12,
-  NSWindowsCP1253StringEncoding:     13,
-  NSWindowsCP1254StringEncoding:     14,
-  NSWindowsCP1250StringEncoding:     15,
-  NSISO2022JPStringEncoding:         21,
-  NSMacOSRomanStringEncoding:        30,
-  NSUTF16StringEncoding:             10,
-  NSUTF16BigEndianStringEncoding:    0x90000100,
+  NSASCIIStringEncoding: 1,
+  NSNEXTSTEPStringEncoding: 2,
+  NSJapaneseEUCStringEncoding: 3,
+  NSUTF8StringEncoding: 4,
+  NSISOLatin1StringEncoding: 5,
+  NSSymbolStringEncoding: 6,
+  NSNonLossyASCIIStringEncoding: 7,
+  NSShiftJISStringEncoding: 8,
+  NSISOLatin2StringEncoding: 9,
+  NSUnicodeStringEncoding: 10,
+  NSWindowsCP1251StringEncoding: 11,
+  NSWindowsCP1252StringEncoding: 12,
+  NSWindowsCP1253StringEncoding: 13,
+  NSWindowsCP1254StringEncoding: 14,
+  NSWindowsCP1250StringEncoding: 15,
+  NSISO2022JPStringEncoding: 21,
+  NSMacOSRomanStringEncoding: 30,
+  NSUTF16StringEncoding: 10,
+  NSUTF16BigEndianStringEncoding: 0x90000100,
   NSUTF16LittleEndianStringEncoding: 0x94000100,
-  NSUTF32StringEncoding:             0x8c000100,
-  NSUTF32BigEndianStringEncoding:    0x98000100,
+  NSUTF32StringEncoding: 0x8c000100,
+  NSUTF32BigEndianStringEncoding: 0x98000100,
   NSUTF32LittleEndianStringEncoding: 0x9c000100
 }
 
@@ -74,7 +74,7 @@ const DEFAULT_ENCODING = Encoding.NSUTF8StringEncoding
  * @param {object} [message]
  * @param {sendMessageCallback} [cb]
  */
-export function sendMessage (message = {}, cb = () => {}) {
+export function sendMessage(message = {}, cb = () => { }) {
   return watch.sendMessage(message, reply => cb(null, reply), err => cb(err))
 }
 
@@ -83,10 +83,10 @@ export function sendMessage (message = {}, cb = () => {}) {
  * @param {fileTransferCallback} [cb]
  * @return {sendMessageCallback} unsubscribe
  */
-export function subscribeToMessages (cb = () => {}) {
+export function subscribeToMessages(cb = () => { }) {
   return _subscribe(EVENT_RECEIVE_MESSAGE, payload => {
     console.log('received message payload', payload)
-    const messageId    = payload.id
+    const messageId = payload.id
     const replyHandler = messageId ? resp => watch.replyToMessageWithId(messageId, resp) : null
     cb(null, payload, replyHandler)
   })
@@ -104,7 +104,7 @@ export function subscribeToMessages (cb = () => {}) {
  * @param {sendMessageCallback} [cb] - may not be called at all if the watch does not reply
  * @return {Promise} - may not be resolved if the watch doesn't reply.
  */
-export function sendMessageData (data, encoding = DEFAULT_ENCODING, cb = () => {}) {
+export function sendMessageData(data, encoding = DEFAULT_ENCODING, cb = () => { }) {
   return new Promise((resolve, reject) => {
     const replyHandler = resp => {
       cb(null, resp)
@@ -137,7 +137,7 @@ export function sendMessageData (data, encoding = DEFAULT_ENCODING, cb = () => {
  * @param {fileTransferCallback} [cb]
  * @return {function} unsubscribe
  */
-export function subscribeToFileTransfers (cb = () => {}) {
+export function subscribeToFileTransfers(cb = () => { }) {
   const subscriptions = [
     _subscribe(EVENT_FILE_TRANSFER_FINISHED, res => cb(null, res)),
     _subscribe(EVENT_FILE_TRANSFER_ERROR, (err, res) => cb(err, res)),
@@ -153,7 +153,7 @@ export function subscribeToFileTransfers (cb = () => {}) {
  * @param {transferFileCallback} [cb]
  * @returns {Promise}
  */
-export function transferFile (uri, metadata = {}, cb = () => {}) {
+export function transferFile(uri, metadata = {}, cb = () => { }) {
   return new Promise((resolve, reject) => {
     watch.transferFile(uri, metadata, resp => {
       resolve(resp)
@@ -174,12 +174,12 @@ export function transferFile (uri, metadata = {}, cb = () => {}) {
  * @param {Function} [cb]
  * @returns {Function}
  */
-export function subscribeToWatchState (cb = () => {}) {
+export function subscribeToWatchState(cb = () => { }) {
   getWatchState(cb) // Initial reading
   return _subscribe(EVENT_WATCH_STATE_CHANGED, payload => cb(null, _WatchState[payload.state]))
 }
 
-export function getWatchState (cb = function () {}) {
+export function getWatchState(cb = function () { }) {
   return new Promise(resolve => {
     watch.getSessionState(state => {
       cb(null, _WatchState[state])
@@ -197,7 +197,7 @@ export function getWatchState (cb = function () {}) {
  * @param {Function} [cb]
  * @returns {Function}
  */
-export function subscribeToWatchReachability (cb = () => {}) {
+export function subscribeToWatchReachability(cb = () => { }) {
   getWatchReachability(cb)
   return _subscribe(EVENT_WATCH_REACHABILITY_CHANGED, payload => cb(null, payload.reachability))
 }
@@ -207,7 +207,7 @@ export function subscribeToWatchReachability (cb = () => {}) {
  * @param {Function} [cb]
  * @returns {Promise}
  */
-export function getWatchReachability (cb = () => {}) {
+export function getWatchReachability(cb = () => { }) {
   return new Promise(resolve => {
     watch.getReachability(reachability => {
       cb(null, reachability)
@@ -225,13 +225,13 @@ export function getWatchReachability (cb = () => {}) {
  * @param {Function} [cb]
  * @returns {Promise}
  */
-export function getIsPaired(cb = () => {}) {
-    return new Promise(resolve => {
-        watch.getIsPaired(isPaired => {
-            cb(null, isPaired);
-            resolve(isPaired);
-        });
+export function getIsPaired(cb = () => { }) {
+  return new Promise(resolve => {
+    watch.getIsPaired(isPaired => {
+      cb(null, isPaired);
+      resolve(isPaired);
     });
+  });
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -243,13 +243,13 @@ export function getIsPaired(cb = () => {}) {
  * @param {Function} [cb]
  * @returns {Promise}
  */
-export function getIsWatchAppInstalled(cb = () => {}) {
-    return new Promise(resolve => {
-        watch.getIsWatchAppInstalled(isWatchAppInstalled => {
-            cb(null, isWatchAppInstalled);
-            resolve(isWatchAppInstalled);
-        });
+export function getIsWatchAppInstalled(cb = () => { }) {
+  return new Promise(resolve => {
+    watch.getIsWatchAppInstalled(isWatchAppInstalled => {
+      cb(null, isWatchAppInstalled);
+      resolve(isWatchAppInstalled);
     });
+  });
 }
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -261,7 +261,7 @@ export function getIsWatchAppInstalled(cb = () => {}) {
  * @param {Function} [cb]
  * @returns {Function}
  */
-export function subscribeToUserInfo (cb = () => {}) {
+export function subscribeToUserInfo(cb = () => { }) {
   getUserInfo(cb)
   return _subscribe(EVENT_WATCH_USER_INFO_RECEIVED, payload => cb(null, payload))
 }
@@ -269,14 +269,14 @@ export function subscribeToUserInfo (cb = () => {}) {
 /**
  * @param {object} [info]
  */
-export function sendUserInfo (info = {}) {
+export function sendUserInfo(info = {}) {
   watch.sendUserInfo(info)
 }
 
 /**
  * @param {object} [info]
  */
-export function sendCurrentComplicationUserInfo (info = {}) {
+export function sendCurrentComplicationUserInfo(info = {}) {
   watch.sendCurrentComplicationUserInfo(info)
 }
 
@@ -285,7 +285,7 @@ export function sendCurrentComplicationUserInfo (info = {}) {
  * @param {Function} [cb]
  * @returns {Promise}
  */
-export function getUserInfo (cb = () => {}) {
+export function getUserInfo(cb = () => { }) {
   return new Promise(resolve => {
     watch.getUserInfo(info => {
       cb(null, info)
@@ -301,7 +301,7 @@ export function getUserInfo (cb = () => {}) {
 /**
  * @param {object} [context]
  */
-export function updateApplicationContext (context = {}) {
+export function updateApplicationContext(context = {}) {
   watch.updateApplicationContext(context)
 }
 
@@ -310,7 +310,7 @@ export function updateApplicationContext (context = {}) {
  * @param {function} [cb]
  * @returns {Function} - unsubscribe function
  */
-export function subscribeToApplicationContext (cb = () => {}) {
+export function subscribeToApplicationContext(cb = () => { }) {
   getApplicationContext(cb)
   return _subscribe(EVENT_APPLICATION_CONTEXT_RECEIVED, payload => cb(null, payload))
 }
@@ -320,7 +320,7 @@ export function subscribeToApplicationContext (cb = () => {}) {
  * @param {function} [cb]
  * @returns {Promise}
  */
-export function getApplicationContext (cb = () => {}) {
+export function getApplicationContext(cb = () => { }) {
   return new Promise(resolve => {
     watch.getApplicationContext(context => {
       cb(null, context)
@@ -340,7 +340,7 @@ export function getApplicationContext (cb = () => {}) {
  * @return {function} unsubscribe
  * @private
  */
-export function _subscribe (event, cb = () => {}) {
-  if (!event) {throw new Error(`Must pass event`)}
-  return NativeEventEmitter.addListener(event, cb).remove
+export function _subscribe(event, cb = () => { }) {
+  if (!event) { throw new Error(`Must pass event`) }
+  return new NativeEventEmitter(NativeModules.WatchBridge).addListener(event, cb).remove
 }
