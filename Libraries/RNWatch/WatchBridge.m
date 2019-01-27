@@ -319,6 +319,10 @@ RCT_EXPORT_METHOD(sendUserInfo:(NSDictionary<NSString *,id> *)userInfo) {
   [self.session transferUserInfo:userInfo];
 }
 
+RCT_EXPORT_METHOD(sendCurrentComplicationUserInfo:(NSDictionary<NSString *,id> *)userInfo) {
+  [self.session transferCurrentComplicationUserInfo:userInfo];
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 RCT_EXPORT_METHOD(getUserInfo:(RCTResponseSenderBlock)callback) {

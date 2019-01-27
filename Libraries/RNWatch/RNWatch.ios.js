@@ -274,6 +274,13 @@ export function sendUserInfo (info = {}) {
 }
 
 /**
+ * @param {object} [info]
+ */
+export function sendCurrentComplicationUserInfo (info = {}) {
+  watch.sendCurrentComplicationUserInfo(info)
+}
+
+/**
  *
  * @param {Function} [cb]
  * @returns {Promise}
