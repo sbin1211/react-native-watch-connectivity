@@ -345,7 +345,7 @@ didReceiveUserInfo:(NSDictionary<NSString *,id> *)userInfo {
 -(void)dispatchEventWithName:(const NSString*) name
                         body:(NSDictionary<NSString *,id> *)body {
   NSLog(@"dispatch %@: %@", name, body);
-  [self.bridge.eventDispatcher sendEventWithName:(NSString*)name
+  [self sendEventWithName:(NSString*)name
                                                body:body];
 }
 
