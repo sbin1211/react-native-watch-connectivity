@@ -341,6 +341,6 @@ export function getApplicationContext (cb = () => {}) {
  * @private
  */
 export function _subscribe (event, cb = () => {}) {
-  if (!event) throw new Error(`Must pass event`)
+  if (!event) {throw new Error(`Must pass event`)}
   return ::NativeAppEventEmitter.addListener(event, cb).remove
 }
