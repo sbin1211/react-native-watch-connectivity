@@ -1,4 +1,4 @@
-import {NativeModules, NativeAppEventEmitter, keymirror} from 'react-native'
+import {NativeModules, NativeEventEmitter, keymirror} from 'react-native'
 const watch = NativeModules.WatchBridge
 
 const EVENT_FILE_TRANSFER_ERROR          = 'WatchFileTransferError'
@@ -342,5 +342,5 @@ export function getApplicationContext (cb = () => {}) {
  */
 export function _subscribe (event, cb = () => {}) {
   if (!event) {throw new Error(`Must pass event`)}
-  return ::NativeAppEventEmitter.addListener(event, cb).remove
+  return NativeEventEmitter.addListener(event, cb).remove
 }
