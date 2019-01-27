@@ -16,8 +16,6 @@ static const NSString* EVENT_APPLICATION_CONTEXT_RECEIVED   = @"WatchApplication
 
 RCT_EXPORT_MODULE()
 
-@synthesize bridge = _bridge;
-
 - (NSArray<NSString *> *)supportedEvents {
     return @[ EVENT_FILE_TRANSFER_ERROR, EVENT_FILE_TRANSFER_FINISHED,EVENT_RECEIVE_MESSAGE,
     EVENT_RECEIVE_MESSAGE_DATA,EVENT_WATCH_STATE_CHANGED,EVENT_WATCH_STATE_CHANGED,EVENT_ACTIVATION_ERROR,EVENT_WATCH_REACHABILITY_CHANGED,
@@ -27,16 +25,16 @@ RCT_EXPORT_MODULE()
 // Init
 ////////////////////////////////////////////////////////////////////////////////
 
-+ (WatchBridge*) shared {
-  static WatchBridge *sharedMyManager = nil;
++(id)allocWithZone:(NSZone *)zone {
+  static RNBridge *sharedInstance = nil;
   static dispatch_once_t onceToken;
   dispatch_once(&onceToken, ^{
-    sharedMyManager = [[self alloc] init];
+    sharedInstance = [super allocWithZone:zone];
   });
-  return sharedMyManager;
+  return sharedInstance;
 }
 
-- (instancetype)init {
++ (instancetype)init {
   self = [super init];
   if ([WCSession isSupported]) {
     WCSession* session = [WCSession defaultSession];
