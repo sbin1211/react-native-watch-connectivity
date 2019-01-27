@@ -343,5 +343,6 @@ export function getApplicationContext(cb = () => { }) {
  */
 export function _subscribe(event, cb = () => { }) {
   if (!event) { throw new Error(`Must pass event`) }
+  console.warn({watch});
   return eventEmitter.addListener(event, cb).remove
 }
